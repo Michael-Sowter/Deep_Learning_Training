@@ -1,31 +1,31 @@
 from datasets import load_dataset
 imdb = load_dataset("imdb")
 
-for cat in imdb:
-    text = []
-    lab = []
-    for i in imdb[cat]:
-        if len(i['text'].split()) < 100:
-            lab.append(i['label'])
-            text.append(i['text'])
+# for cat in imdb:
+#     text = []
+#     lab = []
+#     for i in imdb[cat]:
+#         if len(i['text'].split()) < 100:
+#             lab.append(i['label'])
+#             text.append(i['text'])
 
-    print((len(text)*100) / len(imdb[cat]), '%')
-    print(len(text), len(imdb[cat]))
-    print(i)
-    imdb[cat] = {"text": text, "label" : lab}
+#     print((len(text)*100) / len(imdb[cat]), '%')
+#     print(len(text), len(imdb[cat]))
+#     print(i)
+#     imdb[cat] = {"text": text, "label" : lab}
 
-from datasets import Dataset, DatasetDict
-dataset_train = Dataset.from_dict(imdb["train"])
-dataset_test = Dataset.from_dict(imdb["test"])
-dataset_unsupervised = Dataset.from_dict(imdb["unsupervised"])
-dataset_dict = DatasetDict({"train": dataset_train, "test" : dataset_test, "unsupervised" : dataset_unsupervised})
+# from datasets import Dataset, DatasetDict
+# dataset_train = Dataset.from_dict(imdb["train"])
+# dataset_test = Dataset.from_dict(imdb["test"])
+# dataset_unsupervised = Dataset.from_dict(imdb["unsupervised"])
+# dataset_dict = DatasetDict({"train": dataset_train, "test" : dataset_test, "unsupervised" : dataset_unsupervised})
 
 from transformers import AutoTokenizer
 tokenizer = AutoTokenizer.from_pretrained("distilbert/distilbert-base-uncased")
 
 def preprocess_function(examples):
-    return tokenizer(examples["text"], truncation=False)
-tokenized_imdb = dataset_dict.map(preprocess_function, batched=True)
+    return tokenizer(examples["text"], max_length=512, truncation=True)  # max_length = window size (tensor-512)
+tokenized_imdb = imdb.map(preprocess_function, batched=True)
 
 from transformers import DataCollatorWithPadding
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
@@ -81,7 +81,7 @@ text = "This was a masterpiece. Not completely faithful to the books, but enthra
 
 from transformers import pipeline
 classifier = pipeline("sentiment-analysis", model="stevhliu/my_awesome_model")  # window_size = 512
-classifier(text)
+print(classifier(text))
 
 
 
