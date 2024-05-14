@@ -1,3 +1,9 @@
+# DOESN'T WORK -> had to just reboot VS code
+# # Hot fix for running out of memory
+# import torch
+# torch.cuda.empty_cache()
+
+
 # MS: create training set, evaluation set and validation set
 import sys
 import pandas as pd
