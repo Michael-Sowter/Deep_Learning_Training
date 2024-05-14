@@ -174,11 +174,66 @@ parsed_file = parser.from_file(pdf_filepath)['content']
 print(parsed_file)
 
 
-
 # Split pdf into chunks
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 embedding = HuggingFaceEmbeddings(model_name="avsolatorio/GIST-small-Embedding-v0")  # get embeddings model
 text_splitter = SemanticChunker(embedding)  # apply the model to the type of split we want to perform (a semantic split)
-text_splitter.create_documents([parsed_file])
+chunks = text_splitter.create_documents([parsed_file])
+
+
+output_folder = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Output Data"
+print(len(chunks), chunks[0])
+
+import json
+from collections import defaultdict
+
+dict_chunks = defaultdict(list)
+for par in chunks:
+    dict_chunks[par.page_content]=[]
+outfile = output_folder + "/infer_output.json"
+with open(outfile, "w") as outfile: 
+    json.dump(dict_chunks, outfile, indent = 4)
+print(outfile)
+
+
+outfile = output_folder + "/infer_output.json"
+with open(str(outfile), 'r') as empt_par:
+    strored_chunk = json.load(empt_par)
+strored_chunk
+
+
+from transformers import pipeline
+
+def inference_pipeline(model_path, max_length=512):
+   pipe = pipeline("text-classification", model=model_path, max_length=max_length, truncation=True)
+   return pipe
+
+best_model_path = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Models/Mod_1/Best"
+infer = inference_pipeline(best_model_path)
+
+
+# test
+print(infer("Governance"))
+print(infer("Bye"))
+
+
+# try on our data
+infer(str(strored_chunk)[0].replace("\n\n", ""))
+
+
+# Now do it properly
+res = {}
+
+for i in list(strored_chunk):
+    # res[i] = {"topic" : topic}
+    val = infer(i.replace('\n\n', ''))[0]
+    val['class'] = topic
+    res[i] = val
+res
+
+
+tagged_output = output_folder + "/infer_output.json"
+with open(tagged_output, "w") as tagged_par: 
+    json.dump(res, tagged_par, indent = 4)
