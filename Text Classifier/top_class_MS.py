@@ -1,4 +1,4 @@
-# DOESN'T WORK -> had to just reboot VS code
+# DOESN'T WORK -> had to just reboot VS code. Try this DEVICE = "cuda" if torch.cuda.is_available() else "cpu".
 # # Hot fix for running out of memory
 # import torch
 # torch.cuda.empty_cache()
@@ -129,10 +129,16 @@ data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 id2label = {0: "Negative", 1: "Positive"}
 label2id = {"Negative": 0, "Positive": 1}
 
+# Define device
+import torch
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # This will hopefully force use of GPU and stop killing the VM's memory on the CPU
+
 
 model = AutoModelForSequenceClassification.from_pretrained(pretrained_model_name,
                                                             id2label=id2label,
                                                             label2id=label2id)
+
+model.to(device)  # mount model onto GPU
 
 # How we input training arguments into the model
 
