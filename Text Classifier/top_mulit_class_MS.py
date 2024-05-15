@@ -173,6 +173,7 @@ def pred(topic, iteration):
     )
 
     # Train model
+    print(iteration, topic)
     trainer.train()
 
 
@@ -203,7 +204,7 @@ def pred(topic, iteration):
 
 
     output_folder = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Output Data"
-    print(len(chunks), chunks[0])
+    # print(len(chunks), chunks[0])
 
     import json
     from collections import defaultdict
@@ -260,12 +261,15 @@ def pred(topic, iteration):
 
     return
 
-
+import time
+s = time.time()
 iteration = 0
 Topics = ["approach to the codes",                                 
 "automated content moderation (user to user)",           
-"governance and accountability "]
+"governance and accountability"]
 
 for topic in Topics:
     iteration+=1
     pred(topic, iteration)
+
+time.time()-s
