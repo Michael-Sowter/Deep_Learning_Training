@@ -1,17 +1,22 @@
+import sys
+import time
+import os
+import pandas as pd
+import csv
+import numpy as np
+
+import torch
+from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer, EarlyStoppingCallback
+from transformers import DataCollatorWithPadding
+import evaluate
+from datasets import Dataset
+from transformers import AutoTokenizer
 
 
-def pred(topic, iteration, outfile):
-    # DOESN'T WORK -> had to just reboot VS code. Try this DEVICE = "cuda" if torch.cuda.is_available() else "cpu".
-    # # Hot fix for running out of memory
-    # import torch
-    # torch.cuda.empty_cache()
 
-
-    # MS: create training set, evaluation set and validation set
-    import sys
-    import pandas as pd
-    import csv
-
+def pred(topic, iteration):
+# ------------------------------------------------------------------------------------------------------------------------------------------- #
+    # Create training set, evaluation set and validation set
     dataset_name = "/home/azureuser/cloudfiles/code/Users/Omololu.Makinde/Llama_tutorial/data/consultation2.csv"
     dataset = []
 
@@ -26,48 +31,27 @@ def pred(topic, iteration, outfile):
             })
 
     df_dataset = pd.DataFrame(dataset)
-    df_dataset.drop(columns =['summary'], inplace=True)  # don't need this for now
-    # display(df_dataset)
-
-
+    df_dataset.drop(columns =['summary'], inplace=True)  # don't need this field for now
 
     df_dataset_count = df_dataset['label'].value_counts()
-    df_dataset['label'].value_counts()
-
-
-
 
     keep_rows = list(df_dataset_count[df_dataset_count > 10].index)
     df_dataset = df_dataset[df_dataset['label'].isin(keep_rows)]
-    # display(df_dataset['label'].value_counts())
 
-
-
-
-    import numpy as np
-
-    # add in our classifier labels
+    # Add in our classifier labels
     df_dataset['label'] = np.where(np.array(df_dataset['label']) == topic, 1, 0)
     df_dataset['label'].value_counts(normalize=False)
 
-
-
-    # train and test data
+    # Train and test data
     class_len = len(df_dataset[df_dataset['label'] == 1])  # find how many values we can take and still have a balanced class
     class_0_data = df_dataset[df_dataset.label.eq(0)].sample(class_len) 
     class_1_data = df_dataset[df_dataset.label.eq(1)].sample(class_len)
     train_test_data = pd.concat([class_0_data, class_1_data])  # 50/50 class split
-    # display(train_test_data)
 
-    # evaluation data
+    # Evaluation data
     eval_data = df_dataset.drop(train_test_data.index)  # put the rest into an evaluation set we can play with
-    eval_data
-
-
-
-    from datasets import Dataset
-    from transformers import AutoTokenizer
-
+# ------------------------------------------------------------------------------------------------------------------------------------------- #
+    # Transform data into a hugging face compatible dataset for our models
     huggingface_data = Dataset.from_pandas(train_test_data, preserve_index=False)  # don't include pandas index
 
     pretrained_model_name = "distilbert/distilbert-base-uncased"  # This is our base model
@@ -81,40 +65,11 @@ def pred(topic, iteration, outfile):
 
     split_tokenized_hugginface_data = tokenized_data.train_test_split(test_size=0.10)  # 85/15 train/test split
     print(split_tokenized_hugginface_data)
+# ------------------------------------------------------------------------------------------------------------------------------------------- #
+    # Train model
 
-
-
-    import os
-    import shutil
-
-    def clear_folder_except(folder_path, exclude_folder):
-        # Iterate over the items in the directory
-        for item_name in os.listdir(folder_path):
-            item_path = os.path.join(folder_path, item_name)
-            # Skip the exclude folder
-            if item_name == exclude_folder:
-                continue
-            # Check if the item is a directory
-            if os.path.isdir(item_path):
-                # If it is a directory, remove it and its contents
-                shutil.rmtree(item_path)
-            else:
-                # If it is a file, remove it
-                os.remove(item_path)
-
-
-
-
-    # -HOT FIX TO STOP MODEL TRAINING BREAKING----------------------------------------------------------------------------------------------------------- #
+    # Set where we'll save our models
     model_output_path = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Models/Mod_" + str(iteration)
-    # clear_folder_except(model_output_path, "runs")
-    # --------------------------------------------------------------------------------------------------------------------------------------------------- #
-
-
-    from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer, EarlyStoppingCallback
-    from transformers import DataCollatorWithPadding
-    import evaluate
-
 
     # Select accuracy metric
     evaluation_metrics = ["accuracy", "f1", "precision", "recall"]
@@ -131,19 +86,12 @@ def pred(topic, iteration, outfile):
     id2label = {0: "Negative", 1: "Positive"}
     label2id = {"Negative": 0, "Positive": 1}
 
-    # Define device
-    import torch
+    # Load model and mount to GPU    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # This will hopefully force use of GPU and stop killing the VM's memory on the CPU
-
-
-    model = AutoModelForSequenceClassification.from_pretrained(pretrained_model_name,
-                                                                id2label=id2label,
-                                                                label2id=label2id)
-
+    model = AutoModelForSequenceClassification.from_pretrained(pretrained_model_name, id2label=id2label, label2id=label2id)
     model.to(device)  # mount model onto GPU
 
     # How we input training arguments into the model
-
     training_args = TrainingArguments(
         output_dir=model_output_path,  # path model stored
         learning_rate=2e-5,
@@ -158,128 +106,43 @@ def pred(topic, iteration, outfile):
         logging_steps= 25 # logs made every X batches. So smaller log means more information recorded (see log in table but also more computational and memory requirements)
         )
 
-
     # Model training arguments
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=split_tokenized_hugginface_data["train"],#.select(range(200)),
+        train_dataset=split_tokenized_hugginface_data["train"],#.select(range(200)),  # can limit our data input with select
         eval_dataset=split_tokenized_hugginface_data["test"],
         tokenizer=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics,
         # callbacks=[EarlyStoppingCallback(early_stopping_patience=5)]  # Stop training if no improvement after 3 consecutive epochs
-
     )
 
     # Train model
     print(iteration, topic)
-    # trainer.train()
+    trainer.train()
 
-
-    # # Save the model
+    # Save the model
     best_model_path = model_output_path + "/Best"
-    # trainer.save_model(best_model_path)
+    trainer.save_model(best_model_path)
 
-    # # get best model scores
-    # print(trainer.evaluate())
-
-
-
-    # Parse the pdf
-    from tika import parser
-
-    pdf_filepath = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Overview.pdf"
-    parsed_file = parser.from_file(pdf_filepath)['content']
-    # print(parsed_file)
-
-
-    # Split pdf into chunks
-    from langchain_experimental.text_splitter import SemanticChunker
-    from langchain_community.embeddings import HuggingFaceEmbeddings
-
-    embedding = HuggingFaceEmbeddings(model_name="avsolatorio/GIST-small-Embedding-v0")  # get embeddings model
-    text_splitter = SemanticChunker(embedding)  # apply the model to the type of split we want to perform (a semantic split)
-    chunks = text_splitter.create_documents([parsed_file])
-
-
-
-    # print(len(chunks), chunks[0])
-
-    import json
-    # from collections import defaultdict
-
-    # dict_chunks = defaultdict(list)
-    
-    # for par in chunks:
-    #     dict_chunks[par.page_content]=[]
-    # with open(outfile, "w") as outfile: 
-    #     json.dump(dict_chunks, outfile, indent = 4)
-    # print(outfile)
-
-
-    from transformers import pipeline
-
-    def inference_pipeline(model_path, max_length=512):
-        pipe = pipeline("text-classification", model=model_path, max_length=max_length, truncation=True)
-        return pipe
-
-    infer = inference_pipeline(best_model_path)
-
-
-    # # test
-    # print(infer("Governance"))
-    # print(infer("Bye"))
-
-
-    # # try on our data
-    # infer(str(strored_chunk)[0].replace("\n\n", ""))
-
-
-    if not os.path.exists(outfile): 
-        # If no existing file make a blank template
-        res = {}
-        for chunk in chunks:
-            i = chunk.page_content
-            res[i] = {}
-    else:
-        with open(str(outfile), 'r') as empt_par:
-            res = json.load(empt_par)
-
-    # print(res)
-
-    for chunk in chunks:
-        i = chunk.page_content
-        # print(i)
-        infer_res = infer(i.replace('\n\n', ''))[0]
-        if infer_res['label'] == "Negative": 
-            infer_res['score'] = 1 - infer_res['score']  # keep scoring between 0 and 1
-
-        res[i][topic] = infer_res['score']
-
-
-    with open(outfile, "w") as tagged_pars: 
-        json.dump(res, tagged_pars, indent = 4)
-
-
+    # Get best model scores
+    print(trainer.evaluate())
 
     return
 
-import time
+
 s = time.time()
+
 iteration = 0
 Topics = ["approach to the codes",                                 
 "automated content moderation (user to user)",           
 "governance and accountability"]
 
-import os
-# If file exists, delete file (stops you from adding to existing file):
-outfile = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Output_Data/Inf_res.json"
-if os.path.exists(outfile):
-    os.remove(outfile)
-
 for topic in Topics:
     iteration+=1
-    pred(topic, iteration, outfile)
+    pred(topic, iteration)
+    break
 
+# Run time
 print("run time:", time.time()-s, "s")
