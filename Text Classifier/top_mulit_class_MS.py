@@ -1,6 +1,6 @@
 
 
-def pred(topic, iteration):
+def pred(topic, iteration, outfile):
     # DOESN'T WORK -> had to just reboot VS code. Try this DEVICE = "cuda" if torch.cuda.is_available() else "cpu".
     # # Hot fix for running out of memory
     # import torch
@@ -174,15 +174,15 @@ def pred(topic, iteration):
 
     # Train model
     print(iteration, topic)
-    trainer.train()
+    # trainer.train()
 
 
-    # Save the model
+    # # Save the model
     best_model_path = model_output_path + "/Best"
-    trainer.save_model(best_model_path)
+    # trainer.save_model(best_model_path)
 
-    # get best model scores
-    print(trainer.evaluate())
+    # # get best model scores
+    # print(trainer.evaluate())
 
 
 
@@ -203,25 +203,19 @@ def pred(topic, iteration):
     chunks = text_splitter.create_documents([parsed_file])
 
 
-    output_folder = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Output Data"
+
     # print(len(chunks), chunks[0])
 
     import json
-    from collections import defaultdict
+    # from collections import defaultdict
 
-    dict_chunks = defaultdict(list)
-    for par in chunks:
-        dict_chunks[par.page_content]=[]
-    outfile = output_folder + "/_" + str(iteration) + "_infer_output.json"
-    with open(outfile, "w") as outfile: 
-        json.dump(dict_chunks, outfile, indent = 4)
-    print(outfile)
-
-
-    outfile = output_folder + "/_" + str(iteration) + "_infer_output.json"
-    with open(str(outfile), 'r') as empt_par:
-        strored_chunk = json.load(empt_par)
-    strored_chunk
+    # dict_chunks = defaultdict(list)
+    
+    # for par in chunks:
+    #     dict_chunks[par.page_content]=[]
+    # with open(outfile, "w") as outfile: 
+    #     json.dump(dict_chunks, outfile, indent = 4)
+    # print(outfile)
 
 
     from transformers import pipeline
@@ -233,29 +227,39 @@ def pred(topic, iteration):
     infer = inference_pipeline(best_model_path)
 
 
-    # test
-    print(infer("Governance"))
-    print(infer("Bye"))
+    # # test
+    # print(infer("Governance"))
+    # print(infer("Bye"))
 
 
-    # try on our data
-    infer(str(strored_chunk)[0].replace("\n\n", ""))
+    # # try on our data
+    # infer(str(strored_chunk)[0].replace("\n\n", ""))
 
 
-    # Now do it properly
-    res = {}
+    if not os.path.exists(outfile): 
+        # If no existing file make a blank template
+        res = {}
+        for chunk in chunks:
+            i = chunk.page_content
+            res[i] = {}
+    else:
+        with open(str(outfile), 'r') as empt_par:
+            res = json.load(empt_par)
 
-    for i in list(strored_chunk):
-        # res[i] = {"topic" : topic}
-        val = infer(i.replace('\n\n', ''))[0]
-        val['class'] = topic
-        res[i] = val
-    res
+    # print(res)
+
+    for chunk in chunks:
+        i = chunk.page_content
+        # print(i)
+        infer_res = infer(i.replace('\n\n', ''))[0]
+        if infer_res['label'] == "Negative": 
+            infer_res['score'] = 1 - infer_res['score']  # keep scoring between 0 and 1
+
+        res[i][topic] = infer_res['score']
 
 
-    tagged_output = output_folder + "/_" + str(iteration) + "_infer_output.json"
-    with open(tagged_output, "w") as tagged_par: 
-        json.dump(res, tagged_par, indent = 4)
+    with open(outfile, "w") as tagged_pars: 
+        json.dump(res, tagged_pars, indent = 4)
 
 
 
@@ -268,8 +272,14 @@ Topics = ["approach to the codes",
 "automated content moderation (user to user)",           
 "governance and accountability"]
 
+import os
+# If file exists, delete file (stops you from adding to existing file):
+outfile = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Output_Data/Inf_res.json"
+if os.path.exists(outfile):
+    os.remove(outfile)
+
 for topic in Topics:
     iteration+=1
-    pred(topic, iteration)
+    pred(topic, iteration, outfile)
 
-time.time()-s
+print("run time:", time.time()-s, "s")
