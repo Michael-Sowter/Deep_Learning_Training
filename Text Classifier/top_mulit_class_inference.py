@@ -27,11 +27,11 @@ def pred(topic, model_number, outfile):
         pipe = pipeline("text-classification", model=model_path, max_length=max_length, truncation=True)
         return pipe
 
-    # select best model
+    # select best model from training 
     best_model_path = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Models/Mod_" + str(model_number) + "/Best"
     infer = inference_pipeline(best_model_path)
 
-
+    # If no file exists make a template dict, otherwise load the previous model_output data
     if not os.path.exists(outfile): 
         # If no existing file make a blank template
         res = {}
@@ -39,10 +39,11 @@ def pred(topic, model_number, outfile):
             i = chunk.page_content
             res[i] = {}
     else:
+        # Load previous model data
         with open(str(outfile), 'r') as empt_par:
             res = json.load(empt_par)
 
-
+    # Append generated model data
     for chunk in chunks:
         i = chunk.page_content
         infer_res = infer(i.replace('\n\n', ''))[0]
@@ -51,9 +52,11 @@ def pred(topic, model_number, outfile):
 
         res[i][topic] = infer_res['score']
 
+    # Save new results
     with open(outfile, "w") as tagged_pars: 
         json.dump(res, tagged_pars, indent = 4)
 
+    print(res.values())
     return
 
 
