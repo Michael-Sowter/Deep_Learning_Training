@@ -189,7 +189,7 @@ def pred(topic, iteration, outfile):
     # Parse the pdf
     from tika import parser
 
-    pdf_filepath = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Overview.pdf"
+    pdf_filepath = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Overview.pdf"
     parsed_file = parser.from_file(pdf_filepath)['content']
     # print(parsed_file)
 
