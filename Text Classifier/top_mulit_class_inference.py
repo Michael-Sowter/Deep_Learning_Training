@@ -14,7 +14,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 def pred(topic, model_number, outfile):
 # ------------------------------------------------------------------------------------------------------------------------------------------- #
     # Parse the pdf
-    pdf_filepath = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Overview.pdf"
+    pdf_filepath = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf"
     parsed_file = parser.from_file(pdf_filepath)['content']
 
     # Split pdf into chunks
@@ -28,7 +28,7 @@ def pred(topic, model_number, outfile):
         return pipe
 
     # select best model from training 
-    best_model_path = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Models/Mod_" + str(model_number) + "/Best"
+    best_model_path = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Models/Mod_" + topic + "/Best"
     infer = inference_pipeline(best_model_path)
 
     # If no file exists make a template dict, otherwise load the previous model_output data

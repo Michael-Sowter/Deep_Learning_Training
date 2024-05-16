@@ -13,7 +13,7 @@ from datasets import Dataset
 from transformers import AutoTokenizer
 
 
-
+# CAN I LOG INFO I WANT TO SEE IN THE CHECKPOINT FOLDERS (OR SOMEWHERE ELSE) SOMEHOW E.G. WHAT ARE THE F1 AND ACCURACY SCORES FOR EACH MODEL (OR AT LEAST THE BEST MODEL)
 def pred(topic, iteration):
 # ------------------------------------------------------------------------------------------------------------------------------------------- #
     # Create training set, evaluation set and validation set
@@ -69,7 +69,7 @@ def pred(topic, iteration):
     # Train model
 
     # Set where we'll save our models
-    model_output_path = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Models/Mod_" + str(iteration)
+    model_output_path = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Models/Mod_" + topic
 
     # Select accuracy metric
     evaluation_metrics = ["accuracy", "f1", "precision", "recall"]
@@ -142,7 +142,6 @@ Topics = ["approach to the codes",
 for topic in Topics:
     iteration+=1
     pred(topic, iteration)
-    break
 
 # Run time
 print("run time:", time.time()-s, "s")
