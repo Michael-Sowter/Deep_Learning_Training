@@ -4,6 +4,7 @@ import time
 import os
 from tika import parser
 import json
+import logging
 
 # huggingface packages
 from transformers import pipeline
@@ -11,7 +12,15 @@ from langchain_experimental.text_splitter import SemanticChunker
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 
+# Initiate logging
+logger = logging.getLogger(__name__)
+# keep logging level at info and not debug to not get over whelmed with messages
+# change filemode to "a" to not write over the logging file
+logging.basicConfig(filename="inference.log", level=logging.INFO, filemode="w")  
+
+
 def pred(topic, model_number, outfile):
+    logging.info("Inference Started \t Topic: "+ topic)
 # ------------------------------------------------------------------------------------------------------------------------------------------- #
     # Parse the pdf
     pdf_filepath = "/home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf"
@@ -56,7 +65,7 @@ def pred(topic, model_number, outfile):
     with open(outfile, "w") as tagged_pars: 
         json.dump(res, tagged_pars, indent = 4)
 
-    print(res.values())
+    # print(res.values())
     return
 
 
@@ -76,3 +85,5 @@ for topic in Topics:
     pred(topic, model_number, outfile)
 
 print("run time:", time.time()-s, "s")
+logging.info("Script Ended:")
+logging.info("run time: " + str(round(time.time()-s, 1)) + "s")
