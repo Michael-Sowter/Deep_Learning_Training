@@ -1,1 +1,103 @@
 INFO:__main__:Script Started
+INFO:__main__:Topic: approach to the codes
+INFO:__main__:Parsing PDF file: /home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf
+INFO:__main__:Split text into chunks using semantic chunker
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: avsolatorio/GIST-small-Embedding-v0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:__main__:Calibrate text inferencing pipeline
+INFO:__main__:Output json file NOT found ...
+INFO:__main__:Results template created
+INFO:__main__:Append inferencing result to json file
+INFO:__main__:Results saved to json
+INFO:__main__:Topic: register of risks
+INFO:__main__:Parsing PDF file: /home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf
+INFO:__main__:Split text into chunks using semantic chunker
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: avsolatorio/GIST-small-Embedding-v0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:__main__:Calibrate text inferencing pipeline
+INFO:__main__:Output json file FOUND ...
+INFO:__main__:Outfile loaded
+INFO:__main__:Append inferencing result to json file
+INFO:__main__:Results saved to json
+INFO:__main__:Topic: automated content moderation (user to user)
+INFO:__main__:Parsing PDF file: /home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf
+INFO:__main__:Split text into chunks using semantic chunker
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: avsolatorio/GIST-small-Embedding-v0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:__main__:Calibrate text inferencing pipeline
+INFO:__main__:Output json file FOUND ...
+INFO:__main__:Outfile loaded
+INFO:__main__:Append inferencing result to json file
+INFO:__main__:Results saved to json
+INFO:__main__:Topic: governance and accountability
+INFO:__main__:Parsing PDF file: /home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf
+INFO:__main__:Split text into chunks using semantic chunker
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: avsolatorio/GIST-small-Embedding-v0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:__main__:Calibrate text inferencing pipeline
+INFO:__main__:Output json file FOUND ...
+INFO:__main__:Outfile loaded
+INFO:__main__:Append inferencing result to json file
+INFO:__main__:Results saved to json
+INFO:__main__:Topic: icjg
+INFO:__main__:Parsing PDF file: /home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf
+INFO:__main__:Split text into chunks using semantic chunker
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: avsolatorio/GIST-small-Embedding-v0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:__main__:Calibrate text inferencing pipeline
+INFO:__main__:Output json file FOUND ...
+INFO:__main__:Outfile loaded
+INFO:__main__:Append inferencing result to json file
+INFO:__main__:Results saved to json
+INFO:__main__:Topic: user reporting and complaints (u2u and search)
+INFO:__main__:Parsing PDF file: /home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf
+INFO:__main__:Split text into chunks using semantic chunker
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: avsolatorio/GIST-small-Embedding-v0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:__main__:Calibrate text inferencing pipeline
+INFO:__main__:Output json file FOUND ...
+INFO:__main__:Outfile loaded
+INFO:__main__:Append inferencing result to json file
+INFO:__main__:Results saved to json
+INFO:__main__:Topic: service’s risk assessment
+INFO:__main__:Parsing PDF file: /home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf
+INFO:__main__:Split text into chunks using semantic chunker
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: avsolatorio/GIST-small-Embedding-v0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:__main__:Calibrate text inferencing pipeline
+INFO:__main__:Output json file FOUND ...
+INFO:__main__:Outfile loaded
+INFO:__main__:Append inferencing result to json file
+INFO:__main__:Results saved to json
+INFO:__main__:Topic: content moderation (user to user)
+INFO:__main__:Parsing PDF file: /home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf
+INFO:__main__:Split text into chunks using semantic chunker
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: avsolatorio/GIST-small-Embedding-v0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:__main__:Calibrate text inferencing pipeline
+INFO:__main__:Output json file FOUND ...
+INFO:__main__:Outfile loaded
+INFO:__main__:Append inferencing result to json file
+INFO:__main__:Results saved to json
+INFO:__main__:Topic: user access to services (u2u)
+INFO:__main__:Parsing PDF file: /home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf
+INFO:__main__:Split text into chunks using semantic chunker
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: avsolatorio/GIST-small-Embedding-v0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:__main__:Calibrate text inferencing pipeline
+INFO:__main__:Output json file FOUND ...
+INFO:__main__:Outfile loaded
+INFO:__main__:Append inferencing result to json file
+INFO:__main__:Results saved to json
+INFO:__main__:Topic: enhanced user control (u2u)
+INFO:__main__:Parsing PDF file: /home/azureuser/cloudfiles/code/Users/Michael.Sowter/Deep_Learning_Training/Text Classifier/Input_Data/Overview.pdf
+INFO:__main__:Split text into chunks using semantic chunker
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: avsolatorio/GIST-small-Embedding-v0
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:__main__:Calibrate text inferencing pipeline
+INFO:__main__:Output json file FOUND ...
+INFO:__main__:Outfile loaded
+INFO:__main__:Append inferencing result to json file
+INFO:__main__:Results saved to json
+INFO:__main__:Script Ended
+INFO:__main__:run time: 173.1s

@@ -1,1 +1,43 @@
 INFO:__main__:Script Started
+INFO:__main__:Topic: approach to the codes
+INFO:__main__:Training new model... 
+INFO:__main__:PARAMETERS 	 Learning Rate: 1e-05 	 Weight Decay: 0.01 	 Epochs: 10
+INFO:__main__:Script Ended
+INFO:__main__:Topic: register of risks
+INFO:__main__:Training new model... 
+INFO:__main__:PARAMETERS 	 Learning Rate: 1e-05 	 Weight Decay: 0.01 	 Epochs: 10
+INFO:__main__:Script Ended
+INFO:__main__:Topic: automated content moderation (user to user)
+INFO:__main__:Training new model... 
+INFO:__main__:PARAMETERS 	 Learning Rate: 1e-05 	 Weight Decay: 0.01 	 Epochs: 10
+INFO:__main__:Script Ended
+INFO:__main__:Topic: governance and accountability
+INFO:__main__:Training new model... 
+INFO:__main__:PARAMETERS 	 Learning Rate: 1e-05 	 Weight Decay: 0.01 	 Epochs: 10
+INFO:__main__:Script Ended
+INFO:__main__:Topic: icjg
+INFO:__main__:Training new model... 
+INFO:__main__:PARAMETERS 	 Learning Rate: 1e-05 	 Weight Decay: 0.01 	 Epochs: 10
+INFO:__main__:Script Ended
+INFO:__main__:Topic: user reporting and complaints (u2u and search)
+INFO:__main__:Training new model... 
+INFO:__main__:PARAMETERS 	 Learning Rate: 1e-05 	 Weight Decay: 0.01 	 Epochs: 10
+INFO:__main__:Script Ended
+INFO:__main__:Topic: service’s risk assessment
+INFO:__main__:Training new model... 
+INFO:__main__:PARAMETERS 	 Learning Rate: 1e-05 	 Weight Decay: 0.01 	 Epochs: 10
+INFO:__main__:Script Ended
+INFO:__main__:Topic: content moderation (user to user)
+INFO:__main__:Training new model... 
+INFO:__main__:PARAMETERS 	 Learning Rate: 1e-05 	 Weight Decay: 0.01 	 Epochs: 10
+INFO:__main__:Script Ended
+INFO:__main__:Topic: user access to services (u2u)
+INFO:__main__:Training new model... 
+INFO:__main__:PARAMETERS 	 Learning Rate: 1e-05 	 Weight Decay: 0.01 	 Epochs: 10
+INFO:__main__:Script Ended
+INFO:__main__:Topic: enhanced user control (u2u)
+INFO:__main__:Training new model... 
+INFO:__main__:PARAMETERS 	 Learning Rate: 1e-05 	 Weight Decay: 0.01 	 Epochs: 10
+INFO:__main__:Script Ended
+INFO:__main__:Script Ended
+INFO:__main__:run time: 1283.4s
